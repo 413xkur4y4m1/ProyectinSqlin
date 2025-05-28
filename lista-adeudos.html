@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumnos con Adeudo</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <style>
+        body {background:#fdf7f7; font-family: Arial;}
+        .list-card {
+            background: #ffecec; margin:13px auto; padding:18px 25px;
+            border-radius: 8px; box-shadow:0 1px 6px #fae0e0; max-width:450px;
+        }
+        h1 {color: #b30000; text-align:center;}
+    </style>
+</head>
+<body>
+    <h1>Alumnos con Adeudo</h1>
+    <div id="lista"></div>    <script>    const adeudosRef = firebase.database().ref('adeudos');
+    const alumnosRef = firebase.database().ref('alumno');
+    const materia11Ref = firebase.database().ref('materia11');
+
+    // Get all adeudos and related data
+    adeudosRef.on('value', async (snapshot) => {
+      const cont = document.getElementById('lista');
+      const adeudos = snapshot.val();
+      
+      if (!adeudos) {
+        cont.innerHTML = "<i>No hay alumnos con adeudo.</i>";
+        return;
+      }
+
+      cont.innerHTML = ''; // Clear existing content
+      
+      for (const [key, adeudo] of Object.entries(adeudos)) {
+        // Get alumno data
+        const alumnoSnapshot = await alumnosRef
+          .orderByChild('matricula')
+          .equalTo(adeudo.matricula_alumno)
+          .once('value');
+        
+        const alumnoData = alumnoSnapshot.val();
+        const alumno = alumnoData ? Object.values(alumnoData)[0] : null;        // Get material data
+        const materialSnapshot = await materia11Ref.once('value');
+        const material = materialSnapshot.val();
+
+        let div = document.createElement('div');
+        div.className = "list-card";
+        div.innerHTML = `
+          <b>${alumno ? `${alumno.nombre} ${alumno.apellido_p} ${alumno.apellido_m}` : 'Alumno no encontrado'}</b> 
+          (Matrícula: ${adeudo.matricula_alumno})<br>
+          Material: <b>${material ? material.nombre : 'Material no encontrado'}</b><br>
+          Fecha de adeudo: ${adeudo.fecha_adeudo}<br>
+          Descripción: ${adeudo.descripcion}<br>
+          Monto: <b>$${adeudo.monto}</b>`;
+        cont.appendChild(div);
+      }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumnos con Préstamo</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <style>
+        body {background:#f7fafd; font-family: Arial;}
+        .list-card {
+            background: #e3f1fd; margin:13px auto; padding:18px 25px;
+            border-radius: 8px; box-shadow:0 1px 6px #d0e3fa; max-width:450px;
+        }
+        h1 {color: #125baf; text-align:center;}
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Alumnos con Préstamo</h1>
+    <div id="lista">
+        <div class="loading">Cargando préstamos...</div>
+    </div>
+    <script>    const prestamosRef = firebase.database().ref('prestamos');
+    const alumnosRef = firebase.database().ref('alumno');
+    const materia11Ref = firebase.database().ref('materia11');
+
+    // Get prestamos in real-time
+    prestamosRef.on('value', async (snapshot) => {
+      const cont = document.getElementById('lista');
+      const prestamos = snapshot.val();
+
+      if (!prestamos) {
+        cont.innerHTML = "<i>No hay alumnos con préstamo.</i>";
+        return;
+      }
+
+      cont.innerHTML = ''; // Clear the loading message
+
+      for (const [key, prestamo] of Object.entries(prestamos)) {
+        // Get alumno data
+        const alumnoSnapshot = await alumnosRef
+          .orderByChild('matricula')
+          .equalTo(prestamo.matricula_alumno)
+          .once('value');
+        const alumnoData = alumnoSnapshot.val();
+        const alumno = alumnoData ? Object.values(alumnoData)[0] : null;        // Get material data
+        const materialSnapshot = await materia11Ref.once('value');
+        const material = materialSnapshot.val();
+
+        let div = document.createElement('div');
+        div.className = "list-card";
+        div.innerHTML = `
+          <b>${alumno ? `${alumno.nombre} ${alumno.apellido_p} ${alumno.apellido_m}` : 'Alumno no encontrado'}</b> 
+          (Matrícula: ${prestamo.matricula_alumno})<br>
+          Material: <b>${material ? material.nombre : 'Material no encontrado'}</b><br>
+          Fecha límite: ${new Date(prestamo.fecha_limite).toLocaleString()}<br>
+          Estado: ${prestamo.estado}<br>
+          Materia: ${prestamo.materia}`;
+        cont.appendChild(div);
+      }
+    }, (error) => {
+      console.error('Error:', error);
+      document.getElementById('lista').innerHTML = 
+        "<div style='color:red;text-align:center;padding:20px;'>Error al cargar los préstamos</div>";
+    });
+    </script>
+</body>
+</html>

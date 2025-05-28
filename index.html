@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú Principal | Préstamos y Adeudos</title>
+    <style>
+        body {
+            background: #f5f8fc; font-family: Arial, sans-serif;
+        }
+        .main {
+            margin: 7% auto; padding: 2.5em; background: white;
+            border-radius: 10px; box-shadow:0 2px 12px #b0c2e6; width: 370px; text-align:center;
+        }
+        .btn {
+            display:block; width:90%; margin: 1.2em auto; padding: 1.2em;
+            background:#207ed9; color:white; font-weight:bold;
+            border:none; border-radius:7px; font-size:1.1em; cursor:pointer; transition:.2s;
+        }
+        .btn2 { background: #f4b942; color:#333;}
+        h1 { color:#1a4e87; }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Préstamos y Adeudos</h1>
+        <button class="btn" onclick="location.href='lista-prestamos.html'">Ver alumnos con préstamo</button>
+        <button class="btn2 btn" onclick="location.href='lista-adeudos.html'">Ver alumnos con adeudo</button>
+        <button class="btn" onclick="location.href='adeudo.html'">Generar adeudo manual</button>
+    </div>
+</body>
+</html>
