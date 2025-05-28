@@ -10,6 +10,43 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+// Endpoint para obtener configuración de Azure AD
+app.get('/api/azure-config', (req, res) => {
+    res.json({
+        tenantId: process.env.TENANT_ID,
+        clientId: process.env.CLIENT_ID,
+        redirectUri: 'https://bdsql-9416f.web.app/auth-callback' // URL registrada en Azure AD
+    });
+});
+
+// Endpoint para manejar el callback de autenticación
+app.get('/auth-callback', async (req, res) => {
+    const code = req.query.code;
+    if (!code) {
+        return res.status(400).send('No se recibió código de autorización');
+    }
+
+    try {
+        const tokenUrl = `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`;
+        const params = new URLSearchParams({
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET,            code: code,
+            redirect_uri: 'https://bdsql-9416f.web.app/auth-callback', // URL registrada en Azure AD
+            grant_type: 'authorization_code'
+        });
+
+        const response = await axios.post(tokenUrl, params, {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+
+        // Redirigir a la página de préstamos con el token
+        res.redirect(`/sistema-prestamos.html#token=${response.data.access_token}`);
+    } catch (error) {
+        console.error('Error en autenticación:', error);
+        res.status(500).send('Error en autenticación');
+    }
+});
+
 // Función para obtener el token de acceso
 async function getAccessToken() {
     const url = `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`;
