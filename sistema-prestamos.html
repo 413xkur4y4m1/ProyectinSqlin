@@ -1,724 +1,308 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Préstamos - Login Azure</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .container {
-      background: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      max-width: 600px;
-      width: 100%;
-      animation: slideUp 0.5s ease-out;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .logo {
-      font-size: 2.5em;
-      margin-bottom: 10px;
-      color: #333;
-    }
-
-    h2 {
-      color: #333;
-      margin-bottom: 30px;
-      font-weight: 300;
-    }
-
-    .login-btn {
-      background: #0078d4;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 200px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .login-btn:hover {
-      background: #106ebe;
-      transform: translateY(-2px);
-    }
-
-    .user-form {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 20px;
-      text-align: left;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    .submit-btn {
-      background: #28a745;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-    }
-
-    .submit-btn:hover {
-      background: #218838;
-    }
-
-    .status {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      font-weight: 500;
-    }
-
-    .status.success { background: #d4edda; color: #155724; }
-    .status.error { background: #f8d7da; color: #721c24; }
-    .status.loading { background: #d1ecf1; color: #0c5460; }
-
-    .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #0078d4;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .auth-options {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .auth-toggle {
-      color: #0078d4;
-      text-decoration: underline;
-      cursor: pointer;
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .divider span {
-      padding: 0 10px;
-      color: #666;
-      font-size: 0.9em;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .form-row .form-group {
-      flex: 1;
-    }
-
-    .error-text {
-      color: #dc3545;
-      font-size: 0.85em;
-      margin-top: 5px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Préstamos - Login</title>    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/auth-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script src="js/fingerprint-manager.js"></script>
+    <script src="js/login-manager.js"></script>
+    
+    <style>
+        .ms-button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .ms-button:hover {
+            background-color: #106ebe;
+            transform: translateY(-2px);
+        }
+        .ms-button img {
+            width: 20px;
+            height: 20px;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 15px 0;
+            color: #fff;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .divider span {
+            padding: 0 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        .status.error {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+        .status.success {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+        .status.loading {
+            background: rgba(0, 123, 255, 0.2);
+            color: #0078d4;
+        }
+        .custom-select {
+            background-color: #3777c0;
+            color: #f3f2fa;
+            border: none;
+            padding: 16.25px 25px;
+            padding-left: 68.75px;
+            height: 50px;
+            width: 100%;
+            font-weight: 500;
+            border-radius: 5px;
+            font-size: 17.5px;
+            line-height: 27.5px;
+            letter-spacing: 0.625px;
+            outline: none;
+            transition: all 200ms linear;
+            box-shadow: 0 5px 10px 0 rgba(21,21,21,.2);
+        }
+        .custom-select option {
+            background-color: #3777c0;
+            color: #f3f2fa;
+        }
+    </style>
 </head>
-<body>  <div class="container">
-    <div class="logo">📚</div>
-    <h2>Sistema de Préstamos UL</h2>
-    
-    <div id="authForms">
-      <!-- Formulario de Login -->
-      <div id="loginForm" class="user-form">
-        <h3>Iniciar Sesión</h3>
-        <form id="formLogin" class="auth-form">          <div class="form-group">            <label for="loginMatricula">Matrícula:</label>
-            <input type="text" id="loginMatricula" pattern="[0-9]{1,6}" title="Ingrese una matrícula válida (hasta 6 dígitos)" maxlength="6" required>
-          </div>
-          <div class="form-group">
-            <label for="loginPassword">Contraseña:</label>
-            <input type="password" id="loginPassword" required>
-          </div>
-          <button type="submit" class="submit-btn">Iniciar Sesión</button>
-        </form>
-        <p class="auth-toggle" onclick="toggleForm('signup')">¿No tienes cuenta? Regístrate aquí</p>
-      </div>
+<body>
+    <a href="index.html" class="logo">
+        <img src="images/lasalle-logo.png" alt="Logo La Salle">
+    </a>
 
-      <!-- Formulario de Registro -->
-      <div id="signupForm" class="user-form" style="display: none;">
-        <h3>Registro de Nuevo Usuario</h3>
-        <form id="formSignup" class="auth-form">          <div class="form-group">            <label for="matricula">Matrícula:</label>
-            <input type="text" id="matricula" pattern="[0-9]{1,6}" title="Ingrese una matrícula válida (hasta 6 dígitos)" maxlength="6" required>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nombre">Nombre:</label>
-              <input type="text" id="nombre" required>
-            </div>
-            <div class="form-group">
-              <label for="apellido_p">Apellido Paterno:</label>
-              <input type="text" id="apellido_p" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="apellido_m">Apellido Materno:</label>
-              <input type="text" id="apellido_m" required>
-            </div>
-            <div class="form-group">
-              <label for="carrera">Carrera:</label>
-              <input type="text" id="carrera" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="correo">Correo:</label>
-            <input type="email" id="correo" required>
-          </div>
-          <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" required>
-          </div>
-          <button type="submit" class="submit-btn">Registrarse</button>
-        </form>
-        <p class="auth-toggle" onclick="toggleForm('login')">¿Ya tienes cuenta? Inicia sesión aquí</p>
-      </div>
+    <div class="section">
+        <div class="container">
+            <div class="row full-height justify-content-center">
+                <div class="col-12 text-center align-self-center py-5">
+                    <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                        <h6 class="mb-0 pb-3" id="textos"><span>Inicio de sesión</span><span>Registrarse</span></h6>
+                        <input class="checkbox" type="checkbox" id="reg-log" name="reg-log"/>
+                        <label for="reg-log"></label>
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper">
+                                <!-- Login Card -->
+                                <div class="card-front">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="mb-4 pb-3" style="color: #fff; text-shadow: 0 2px 8px rgba(255,255,255,0.5);">Inicio de sesión</h4>
+                                            <form onsubmit="handleLogin(event); return false;">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-style" placeholder="Matrícula" id="loginMatricula" pattern="[0-9]{1,6}" maxlength="6" required>
+                                                    <i class="input-icon uil uil-user"></i>
+                                                </div>    
+                                                <div class="form-group mt-2">
+                                                    <input type="password" class="form-style" placeholder="Contraseña" id="loginPassword" required>
+                                                    <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                                <button type="submit" class="btn mt-4">Iniciar sesión</button>
+                                            </form>
+                                            <div class="divider"><span>O</span></div>
+                                            <button type="button" class="ms-button" onclick="handleMicrosoftSignIn()">
+                                                <svg viewBox="0 0 23 23" width="20" height="20">
+                                                    <path fill="#f35325" d="M1 1h10v10H1z"/>
+                                                    <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                                                    <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                                                    <path fill="#ffba08" d="M12 12h10v10H12z"/>
+                                                </svg>
+                                                Continuar con Microsoft
+                                            </button>
+                                            <p class="mb-0 mt-4 text-center"><a href="#0" class="link">¿Olvidaste tu contraseña?</a></p>
+                                        </div>
+                                    </div>
+                                </div>
 
-      <div class="divider">
-        <span>O</span>
-      </div>
+                                <!-- Register Card -->
+                                <div class="card-back">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="mb-4 pb-3" style="color: #fff; text-shadow: 0 2px 8px rgba(255,255,255,0.5);">Registrarse</h4>
+                                            <form onsubmit="handleRegister(event); return false;">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-style" placeholder="Nombre(s)" id="nombre" required>
+                                                    <i class="input-icon uil uil-user"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-style" placeholder="Apellido Paterno" id="apellido_p" required>
+                                                    <i class="input-icon uil uil-user"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-style" placeholder="Apellido Materno" id="apellido_m" required>
+                                                    <i class="input-icon uil uil-user"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-style" placeholder="Matrícula" id="matricula" pattern="[0-9]{1,6}" maxlength="6" required>
+                                                    <i class="input-icon uil uil-graduation-cap"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="email" class="form-style" placeholder="Correo" id="correo" required>
+                                                    <i class="input-icon uil uil-at"></i>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-style" placeholder="Contraseña" id="password" required>
+                                                    <i class="input-icon uil uil-lock-alt"></i>
+                                                </div>
+                                                <button type="submit" class="btn mt-4">Registrarse</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-      <button id="loginBtn" class="login-btn" onclick="iniciarSesion()">
-        <svg class="microsoft-icon" viewBox="0 0 23 23" width="20" height="20">
-          <path fill="#f35325" d="M1 1h10v10H1z"/>
-          <path fill="#81bc06" d="M12 1h10v10H12z"/>
-          <path fill="#05a6f0" d="M1 12h10v10H1z"/>
-          <path fill="#ffba08" d="M12 12h10v10H12z"/>
-        </svg>
-        Continuar con Microsoft
-      </button>
-
-      <div id="status" class="status" style="display: none;"></div>
-    </div>
-    
-    <div id="prestamoForm" class="user-form" style="display: none;">
-      <h3 style="text-align: center; margin-bottom: 20px;">Registro de Préstamo</h3>
-      <form id="formPrestamo">        <div class="form-group">          <label for="matricula">Matrícula del Alumno:</label>
-          <input type="text" id="matricula" name="matricula" pattern="[0-9]{1,6}" title="Ingrese una matrícula válida (hasta 6 dígitos)" maxlength="6" required>
+                        <!-- Status Messages -->
+                        <div id="status" class="status"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="material">Material:</label>
-          <select id="material" name="material" required>
-            <option value="">Seleccionar material...</option>
-            <!-- Se llenará dinámicamente desde Firebase -->
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="fecha_limite">Fecha límite de devolución:</label>
-          <input type="date" id="fecha_limite" name="fecha_limite" required>
-        </div>
-        <button type="submit" class="submit-btn">Registrar Préstamo</button>
-      </form>
     </div>
 
-    <div id="prestamoDatos" class="user-form" style="display: none;">
-      <h3 style="text-align: center; margin-bottom: 20px;">✅ Préstamo Registrado</h3>
-      <div id="detallesPrestamo"></div>
-    </div>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-database.js"></script>
-  <script src="js/firebase-config.js"></script>
-
-  <script>
-    const statusElement = document.getElementById('status');
-    const prestamoForm = document.getElementById('prestamoForm');
-    const prestamoDatos = document.getElementById('prestamoDatos');
-    const formPrestamo = document.getElementById('formPrestamo');
-    const materialSelect = document.getElementById('material');
-    let accessToken = null;
-
+    <script src="js/prestamos.js"></script>
+    <script>    // Función para mostrar mensajes de estado
     function mostrarEstado(mensaje, tipo) {
-      const statusDiv = document.getElementById('status');
-      statusDiv.textContent = mensaje;
-      statusDiv.className = ''; // Limpiar clases anteriores
-      
-      // Aplicar estilos según el tipo de mensaje
-      if (tipo === 'error') {
-        statusDiv.style.color = '#dc3545';
-        statusDiv.style.backgroundColor = '#f8d7da';
-        statusDiv.style.padding = '10px';
-        statusDiv.style.borderRadius = '4px';
-        statusDiv.style.marginBottom = '10px';
-      } else if (tipo === 'success') {
-        statusDiv.style.color = '#28a745';
-        statusDiv.style.backgroundColor = '#d4edda';
-        statusDiv.style.padding = '10px';
-        statusDiv.style.borderRadius = '4px';
-        statusDiv.style.marginBottom = '10px';
-      } else if (tipo === 'loading') {
-        statusDiv.style.color = '#0056b3';
-        statusDiv.style.backgroundColor = '#e9ecef';
-        statusDiv.style.padding = '10px';
-        statusDiv.style.borderRadius = '4px';
-        statusDiv.style.marginBottom = '10px';
-      }
-      
-      statusDiv.style.display = 'block';
+        const statusDiv = document.getElementById('status');
+        statusDiv.className = 'status ' + tipo;
+        statusDiv.textContent = mensaje;
+        statusDiv.style.display = 'block';
     }
 
-    async function iniciarSesion() {
-      try {
-        mostrarEstado('Iniciando sesión con Microsoft...', 'loading');
-        
-        const config = {
-          tenantId: 'dc56f7e2-2780 BA50-a4eb-c599420ecf',
-          clientId: '91f136be-66ba-4466-ba50-a4eb-c599420ecf',
-          redirectUri: 'https://bdsql-9416f.web.app/auth-callback'
-        };
-        
-        const authUrl = new URL(`https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize`);
-        authUrl.searchParams.append('client_id', config.clientId);
-        authUrl.searchParams.append('response_type', 'code');
-        authUrl.searchParams.append('redirect_uri', config.redirectUri);
-        authUrl.searchParams.append('scope', 'openid profile email');
-        authUrl.searchParams.append('response_mode', 'query');
+    // Iniciar sesión con correo y contraseña
+    async function iniciarSesion(event) {
+        event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 
-        window.location.href = authUrl.toString();
-        
-      } catch (error) {
-        console.error('Error detallado:', error);
-        mostrarEstado('Error al iniciar sesión: ' + (error.message || 'Error desconocido'), 'error');
-      }
-    }
-
-    // Verificar si hay un token en la URL (después del callback)
-    async function verificarAutenticacion() {
-      const hash = window.location.hash;
-      if (hash && hash.includes('token=')) {
-        try {
-          const token = hash.split('token=')[1];
-          accessToken = token;
-          
-          // Limpiar el hash de la URL
-          window.location.hash = '';
-          
-          // Aquí agregamos la lógica para solicitar datos adicionales si es necesario
-          const userInfo = await obtenerInformacionUsuarioMicrosoft(token);
-          
-          if (!userInfo.matricula) {
-            // Si no tiene matrícula, mostrar formulario para completar datos
-            document.getElementById('signupForm').style.display = 'block';
-            document.getElementById('correo').value = userInfo.email;
-            document.getElementById('nombre').value = userInfo.name || '';
-            mostrarEstado('Por favor, complete sus datos de registro', 'info');
-            return;
-          }
-            mostrarEstado('¡Sesión iniciada correctamente!', 'success');
-          await cargarMateriales();
-          document.getElementById('authForms').style.display = 'none';
-          prestamoForm.style.display = 'block';
-          await mostrarPrestamosPropios(); // Mostrar préstamos del usuario
-        } catch (error) {
-          console.error('Error al verificar autenticación:', error);
-          mostrarEstado('Error al verificar la sesión: ' + error.message, 'error');
-        }
-      }
-    }    async function cargarMateriales() {
-      try {
-        const materialesSnapshot = await firebase.database().ref('materiales').once('value');
-        const materiales = materialesSnapshot.val();
-        
-        if (materiales) {
-          Object.entries(materiales).forEach(([id, material]) => {
-            const option = document.createElement('option');
-            option.value = id;
-            option.textContent = `${material.nombre} (Disponible: ${material.cantidad})`;
-            materialSelect.appendChild(option);
-          });
-        }
-      } catch (error) {
-        console.error('Error al cargar materiales:', error);
-        mostrarEstado('Error al cargar materiales: ' + error.message, 'error');
-      }
-    }
-
-    formPrestamo.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      try {
-        mostrarEstado('Registrando préstamo...', 'loading');
-
-        const formData = new FormData(formPrestamo);
-        const prestamoData = {
-          matricula_alumno: parseInt(formData.get('matricula')),
-          id_material: formData.get('material'),
-          fecha_prestamo: new Date().toISOString().split('T')[0],
-          fecha_limite: formData.get('fecha_limite'),
-          estado: 'activo',
-          fecha_registro: new Date().toISOString()
-        };
-
-        // Verificar que todos los campos estén llenos
-        if (!prestamoData.matricula_alumno || !prestamoData.id_material || !prestamoData.fecha_limite) {
-          throw new Error('Por favor complete todos los campos');
-        }
-
-        // Verificar que el alumno existe
-        const alumnoSnapshot = await firebase.database()
-          .ref('alumno')
-          .orderByChild('matricula')
-          .equalTo(prestamoData.matricula_alumno)
-          .once('value');
-
-        if (!alumnoSnapshot.exists()) {
-          throw new Error('No se encontró un alumno con esa matrícula');
-        }
-
-        const alumnoData = Object.values(alumnoSnapshot.val())[0];
-
-        // Verificar disponibilidad del material
-        const materialRef = firebase.database().ref(`materiales/${prestamoData.id_material}`);
-        const materialSnapshot = await materialRef.once('value');
-        const materialData = materialSnapshot.val();
-
-        if (!materialData) {
-          throw new Error('El material seleccionado no existe');
-        }
-
-        if (materialData.cantidad <= 0) {
-          throw new Error('No hay unidades disponibles de este material');
-        }
-
-        // Agregar información adicional al préstamo
-        prestamoData.nombre_material = materialData.nombre;
-        prestamoData.nombre_alumno = `${alumnoData.nombre} ${alumnoData.apellido_p}`;
-
-        // Actualizar material (reducir cantidad)
-        await materialRef.update({
-          cantidad: materialData.cantidad - 1
-        });
-
-        // Guardar préstamo
-        const newPrestamoRef = firebase.database().ref('prestamos').push();
-        await newPrestamoRef.set({
-          ...prestamoData,
-          id_prestamo: newPrestamoRef.key
-        });
-
-        mostrarEstado('¡Préstamo registrado exitosamente!', 'success');
-          // Limpiar la página y mostrar mensaje de éxito
-        document.body.innerHTML = `
-          <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; max-width: 600px; margin: 40px auto;">
-            <div style="font-size: 64px; margin-bottom: 20px;">✅</div>
-            <h2 style="color: #28a745; margin-bottom: 20px;">¡Préstamo Registrado Exitosamente!</h2>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: left;">
-              <div style="display: grid; gap: 10px;">
-                <div><strong>ID Préstamo:</strong> ${newPrestamoRef.key}</div>
-                <div><strong>Alumno:</strong> ${prestamoData.nombre_alumno}</div>
-                <div><strong>Matrícula:</strong> ${prestamoData.matricula_alumno}</div>
-                <div><strong>Material:</strong> ${prestamoData.nombre_material}</div>
-                <div><strong>Fecha de Préstamo:</strong> ${prestamoData.fecha_prestamo}</div>
-                <div><strong>Fecha Límite:</strong> ${prestamoData.fecha_limite}</div>
-                <div><strong>Estado:</strong> ${prestamoData.estado}</div>
-              </div>
-            </div>
-            <button onclick="window.location.reload()" style="background: #0078d4; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 20px;">Registrar Otro Préstamo</button>
-            <button onclick="window.location.href='lista-prestamos.html'" style="background: #28a745; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%;">Ver Lista de Préstamos</button>
-          </div>
-        `;
-
-      } catch (error) {
-        console.error('Error al registrar préstamo:', error);
-        mostrarEstado(error.message || 'Error al registrar el préstamo', 'error');
-      }
-    });
-
-    // Establecer fecha mínima para la fecha límite
-    const fechaLimite = document.getElementById('fecha_limite');
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    fechaLimite.min = tomorrow.toISOString().split('T')[0];
-
-    // Verificar autenticación al cargar la página
-    verificarAutenticacion();
-
-    function toggleForm(form) {
-      document.getElementById('loginForm').style.display = form === 'login' ? 'block' : 'none';
-      document.getElementById('signupForm').style.display = form === 'signup' ? 'block' : 'none';
-    }
-
-    // Registro de usuario tradicional
-    document.getElementById('formSignup').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      mostrarEstado('Registrando usuario...', 'loading');
-
-      try {
-        const userData = {
-          matricula: parseInt(document.getElementById('matricula').value),
-          nombre: document.getElementById('nombre').value,
-          apellido_p: document.getElementById('apellido_p').value,
-          apellido_m: document.getElementById('apellido_m').value,
-          carrera: document.getElementById('carrera').value,
-          correo: document.getElementById('correo').value,
-          fecha_registro: new Date().toISOString(),
-          fecha_alta: new Date().toISOString().split('T')[0]
-        };
-
-        // Verificar si la matrícula ya existe
-        const matriculaExistente = await firebase.database()
-          .ref('alumno')
-          .orderByChild('matricula')
-          .equalTo(userData.matricula)
-          .once('value');
-
-        if (matriculaExistente.exists()) {
-          throw new Error('La matrícula ya está registrada');
-        }
-
-        // Crear usuario en Firebase Auth
-        const auth = await firebase.auth().createUserWithEmailAndPassword(
-          userData.correo,
-          document.getElementById('password').value
-        );
-
-        // Guardar datos adicionales en Realtime Database
-        await firebase.database()
-          .ref('alumno/' + auth.user.uid)
-          .set(userData);
-
-        mostrarEstado('¡Registro exitoso!', 'success');
-        await cargarMateriales();
-        document.getElementById('authForms').style.display = 'none';
-        prestamoForm.style.display = 'block';
-
-      } catch (error) {
-        console.error('Error:', error);
-        mostrarEstado('Error: ' + error.message, 'error');
-      }
-    });    // Login tradicional
-    document.getElementById('formLogin').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      mostrarEstado('Iniciando sesión...', 'loading');
-
-      try {
         const matricula = document.getElementById('loginMatricula').value;
-        
-        // Buscar el correo asociado a la matrícula
-        const alumnoSnapshot = await firebase.database()
-          .ref('alumno')
-          .orderByChild('matricula')
-          .equalTo(parseInt(matricula))
-          .once('value');
+        const password = document.getElementById('loginPassword').value;
 
-        if (!alumnoSnapshot.exists()) {
-          mostrarEstado('Matrícula no encontrada', 'error');
-          return;
+        if (!matricula || !password) {
+            mostrarEstado('Por favor ingrese matrícula y contraseña', 'error');
+            return;
         }
 
-        const alumnoData = Object.values(alumnoSnapshot.val())[0];
-        
-        try {          // Iniciar sesión con Firebase Auth
-          await firebase.auth().signInWithEmailAndPassword(
-            alumnoData.correo,
-            document.getElementById('loginPassword').value
-          );
+        try {
+            mostrarEstado('Iniciando sesión...', 'loading');
+            await firebase.auth().signInWithEmailAndPassword(
+                `${matricula}@ulsa.mx`,
+                password
+            );
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarEstado('Error al iniciar sesión: ' + error.message, 'error');
+        }
+    }
 
-          mostrarEstado('¡Sesión iniciada correctamente!', 'success');
-          await cargarMateriales();
-          document.getElementById('authForms').style.display = 'none';
-          prestamoForm.style.display = 'block';
-          await mostrarPrestamosPropios(); // Mostrar préstamos del usuario
+    // Iniciar sesión con Microsoft
+    async function iniciarSesionMicrosoft() {
+        try {
+            mostrarEstado('Iniciando sesión con Microsoft...', 'loading');
+            const provider = new firebase.auth.OAuthProvider('microsoft.com');
+            
+            // Configuración específica para el proveedor de Microsoft
+            provider.setCustomParameters({
+                tenant: 'common', // o tu ID de tenant específico
+                prompt: 'select_account'
+            });
 
-        } catch (authError) {
-          // Error específico de autenticación
-          mostrarEstado('Contraseña incorrecta', 'error');
-          return;
+            // Agregar los scopes necesarios
+            provider.addScope('profile');
+            provider.addScope('email');
+
+            const result = await firebase.auth().signInWithPopup(provider);
+            const user = result.user;
+            
+            // Verificar si el usuario existe en la base de datos
+            const userSnapshot = await firebase.database()
+                .ref('alumno')
+                .orderByChild('correo')
+                .equalTo(user.email)
+                .once('value');
+
+            if (!userSnapshot.exists()) {
+                mostrarEstado('Usuario no encontrado. Por favor regístrese primero.', 'error');
+                return;
+            }
+
+            // Redirigir a la página de préstamos
+            window.location.href = 'prestamos.html';
+            
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarEstado('Error al iniciar sesión con Microsoft: ' + error.message, 'error');
+        }
+    }
+
+    // Registrar nuevo usuario
+    async function registrar() {
+        const nombre = document.getElementById('nombre').value;
+        const apellido_p = document.getElementById('apellido_p').value;
+        const apellido_m = document.getElementById('apellido_m').value;
+        const matricula = document.getElementById('matricula').value;
+        const correo = document.getElementById('correo').value;
+        const password = document.getElementById('password').value;
+
+        if (!nombre || !apellido_p || !apellido_m || !matricula || !correo || !password) {
+            mostrarEstado('Por favor complete todos los campos', 'error');
+            return;
         }
 
-      } catch (error) {
-        console.error('Error:', error);
-        mostrarEstado('Error al iniciar sesión. Por favor, intente de nuevo.', 'error');
-      }
-    });
+        try {
+            mostrarEstado('Registrando usuario...', 'loading');
 
-    // Función para obtener información del usuario de Microsoft
-    async function obtenerInformacionUsuarioMicrosoft(token) {
-      try {
-        const response = await fetch('https://graph.microsoft.com/v1.0/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        return await response.json();
-      } catch (error) {
-        console.error('Error al obtener información de usuario:', error);
-        throw error;
-      }
+            // Crear usuario en Firebase Auth
+            const userCredential = await firebase.auth().createUserWithEmailAndPassword(
+                correo,
+                password
+            );
+
+            // Guardar datos adicionales en Realtime Database
+            const userData = {
+                nombre: nombre,
+                apellido_p: apellido_p,
+                apellido_m: apellido_m,
+                matricula: matricula,
+                correo: correo,
+                fecha_registro: new Date().toISOString()
+            };
+
+            await firebase.database().ref('alumno/' + matricula).set(userData);
+            mostrarEstado('¡Registro exitoso!', 'success');
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarEstado('Error al registrar: ' + error.message, 'error');
+        }
     }
-
-    // After successful login show user's loans
-    async function mostrarPrestamosPropios() {
-      try {
-        const user = firebase.auth().currentUser;
-        if (!user) return;
-
-        const alumnoSnapshot = await firebase.database()
-          .ref('alumno')
-          .orderByChild('correo')
-          .equalTo(user.email)
-          .once('value');
-
-        if (!alumnoSnapshot.exists()) return;
-        
-        const alumnoData = Object.values(alumnoSnapshot.val())[0];
-        const matricula = alumnoData.matricula;
-
-        // Get user's loans
-        const prestamosRef = firebase.database().ref('prestamos');
-        prestamosRef.orderByChild('matricula_alumno')
-          .equalTo(matricula)
-          .on('value', (snapshot) => {            const prestamos = snapshot.val();
-            
-            // Remove existing loans section if it exists
-            const existingPrestamos = document.getElementById('misPrestamos');
-            if (existingPrestamos) {
-                existingPrestamos.remove();
-            }
-            
-            const prestamosDiv = document.createElement('div');
-            prestamosDiv.id = 'misPrestamos';
-            prestamosDiv.className = 'user-form';
-            prestamosDiv.style.marginTop = '20px';
-
-            if (!prestamos) {
-              prestamosDiv.innerHTML = `
-                <h3 style="text-align: center;">Mis Préstamos</h3>
-                <p style="text-align: center; color: #666;">No tienes préstamos activos.</p>
-              `;
-            } else {
-              prestamosDiv.innerHTML = `<h3 style="text-align: center;">Mis Préstamos</h3>`;
-              
-              Object.entries(prestamos)
-                .sort(([,a], [,b]) => new Date(b.fecha_registro) - new Date(a.fecha_registro))
-                .forEach(([key, prestamo]) => {
-                  const fechaLimite = new Date(prestamo.fecha_limite);
-                  const hoy = new Date();
-                  const estaVencido = hoy > fechaLimite && prestamo.estado === 'activo';
-                  
-                  const estadoColor = estaVencido ? '#dc3545' : 
-                                    prestamo.estado === 'activo' ? '#28a745' : '#6c757d';
-                  const estadoBg = estaVencido ? '#f8d7da' : 
-                                 prestamo.estado === 'activo' ? '#d4edda' : '#e9ecef';
-                  const estadoTexto = estaVencido ? 'VENCIDO' : 
-                                    prestamo.estado.toUpperCase();
-
-                  const prestamoCard = document.createElement('div');
-                  prestamoCard.style.background = '#f8f9fa';
-                  prestamoCard.style.padding = '15px';
-                  prestamoCard.style.borderRadius = '8px';
-                  prestamoCard.style.marginBottom = '10px';
-                  
-                  prestamoCard.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                      <strong style="color: #125baf;">${prestamo.nombre_material}</strong>
-                      <span style="background: ${estadoBg}; color: ${estadoColor}; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">
-                        ${estadoTexto}
-                      </span>
-                    </div>
-                    <div style="color: #666; font-size: 0.9em;">
-                      Fecha de Préstamo: ${new Date(prestamo.fecha_prestamo).toLocaleDateString()}<br>
-                      Fecha Límite: ${new Date(prestamo.fecha_limite).toLocaleDateString()}
-                    </div>
-                  `;
-                  
-                  prestamosDiv.appendChild(prestamoCard);
-                });
-            }
-            
-            document.getElementById('prestamoForm').insertAdjacentElement('afterend', prestamosDiv);
-          });
-          
-      } catch (error) {
-        console.error('Error al cargar préstamos:', error);
-        mostrarEstado('Error al cargar tus préstamos', 'error');
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>

@@ -10,8 +10,24 @@ const firebaseConfig = {
     measurementId: "G-LTD31T7MYY"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase safely
+let app;
+try {
+    if (!firebase.apps.length) {
+        app = firebase.initializeApp(firebaseConfig);
+    } else {
+        app = firebase.app();
+    }
+    
+    // Get database reference
+    const database = firebase.database();
 
-// Get a reference to the database service
-const database = firebase.database();
+    // Configure auth persistence to local
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .catch(error => {
+            console.error('Firebase persistence error:', error);
+        });
+} catch (error) {
+    console.error('Firebase initialization error:', error);
+    // Handle initialization error (show user-friendly message if needed)
+}

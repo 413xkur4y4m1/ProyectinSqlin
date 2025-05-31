@@ -15,7 +15,7 @@ app.get('/api/azure-config', (req, res) => {
     res.json({
         tenantId: process.env.TENANT_ID,
         clientId: process.env.CLIENT_ID,
-        redirectUri: 'https://bdsql-9416f.web.app/auth-callback' // URL registrada en Azure AD
+        redirectUri: `${req.protocol}://${req.get('host')}/auth-callback`
     });
 });
 
@@ -30,8 +30,9 @@ app.get('/auth-callback', async (req, res) => {
         const tokenUrl = `https://login.microsoftonline.com/${process.env.TENANT_ID}/oauth2/v2.0/token`;
         const params = new URLSearchParams({
             client_id: process.env.CLIENT_ID,
-            client_secret: process.env.CLIENT_SECRET,            code: code,
-            redirect_uri: 'https://bdsql-9416f.web.app/auth-callback', // URL registrada en Azure AD
+            client_secret: process.env.CLIENT_SECRET,
+            code: code,
+            redirect_uri: `${req.protocol}://${req.get('host')}/auth-callback`,
             grant_type: 'authorization_code'
         });
 
@@ -39,7 +40,7 @@ app.get('/auth-callback', async (req, res) => {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 
-        // Redirigir a la página de préstamos con el token
+        // Redirigir a la página de préstamos
         res.redirect(`/sistema-prestamos.html#token=${response.data.access_token}`);
     } catch (error) {
         console.error('Error en autenticación:', error);
