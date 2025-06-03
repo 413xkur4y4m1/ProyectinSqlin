@@ -1,10 +1,17 @@
-// Firebase Auth and Database integration
+// Get current user from auth.js
 let currentUser = null;
 
-// Auth state observer
-firebase.auth().onAuthStateChanged((user) => {
+// UI initialization
+document.addEventListener('DOMContentLoaded', () => {
+    // Update UI based on auth state
+    currentUser = authState.user;
+    updateUI(authState.user);
+});
+
+// Update UI elements based on auth state
+function updateUI(user) {
     if (user) {
-        currentUser = user;        document.getElementById('login').style.display = 'none';
+        document.getElementById('login').style.display = 'none';
         document.getElementById('userInfo').style.display = 'block';
         document.querySelector('.form-content').style.display = 'block';
         document.getElementById('userName').textContent = user.displayName || user.email;
@@ -16,7 +23,7 @@ firebase.auth().onAuthStateChanged((user) => {
         document.getElementById('formPrestamo').style.display = 'none';
         document.getElementById('qrContainer').style.display = 'none';
     }
-});
+}
 
 // Función para mostrar mensajes de estado
 function mostrarEstado(mensaje, tipo) {
@@ -29,119 +36,6 @@ function mostrarEstado(mensaje, tipo) {
         setTimeout(() => {
             statusDiv.style.display = 'none';
         }, 5000);
-    }
-}
-
-// Iniciar sesión con correo y contraseña
-async function iniciarSesion() {
-    const matricula = document.getElementById('loginMatricula').value;
-    const password = document.getElementById('loginPassword').value;
-
-    if (!matricula || !password) {
-        mostrarEstado('Por favor ingrese matrícula y contraseña', 'error');
-        return;
-    }
-
-    try {
-        mostrarEstado('Iniciando sesión...', 'loading');
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(
-            `${matricula}@ulsa.mx`,
-            password
-        );
-        
-        // Verificar si el usuario existe en la base de datos
-        const snapshot = await firebase.database()
-            .ref('alumno')
-            .orderByChild('matricula')
-            .equalTo(parseInt(matricula))
-            .once('value');
-
-        if (!snapshot.exists()) {
-            mostrarEstado('Usuario no encontrado', 'error');
-            return;
-        }
-
-        window.location.href = 'prestamos.html';
-    } catch (error) {
-        console.error('Error:', error);
-        mostrarEstado('Error al iniciar sesión: ' + error.message, 'error');
-    }
-}
-
-// Iniciar sesión con Microsoft
-async function iniciarSesionMicrosoft() {
-    try {
-        mostrarEstado('Iniciando sesión con Microsoft...', 'loading');
-        const provider = new firebase.auth.OAuthProvider('microsoft.com');
-        provider.setCustomParameters({
-            tenant: 'common',
-            prompt: 'select_account'
-        });
-
-        const result = await firebase.auth().signInWithPopup(provider);
-        currentUser = result.user;
-        
-        // Check if user exists in database
-        const userSnapshot = await firebase.database()
-            .ref('alumno')
-            .orderByChild('correo')
-            .equalTo(result.user.email)
-            .once('value');
-
-        if (!userSnapshot.exists()) {
-            mostrarEstado('Usuario no encontrado. Por favor regístrese primero.', 'error');
-            return;
-        }
-
-        window.location.href = 'prestamos.html';
-    } catch (error) {
-        console.error('Error:', error);
-        mostrarEstado('Error al iniciar sesión: ' + error.message, 'error');
-    }
-}
-
-// Registrar nuevo usuario
-async function registrar() {
-    const nombre = document.getElementById('nombre').value;
-    const apellido_p = document.getElementById('apellido_p').value;
-    const apellido_m = document.getElementById('apellido_m').value;
-    const matricula = document.getElementById('matricula').value;
-    const correo = document.getElementById('correo').value;
-    const password = document.getElementById('password').value;
-
-    if (!nombre || !apellido_p || !matricula || !correo || !password) {
-        mostrarEstado('Por favor complete todos los campos requeridos', 'error');
-        return;
-    }
-
-    try {
-        mostrarEstado('Registrando usuario...', 'loading');
-        
-        // Crear usuario en Firebase Auth
-        const userCredential = await firebase.auth().createUserWithEmailAndPassword(
-            correo,
-            password
-        );
-
-        // Guardar información adicional en la base de datos
-        const userData = {
-            matricula: parseInt(matricula),
-            nombre,
-            apellido_p,
-            apellido_m,
-            correo,
-            tipo_usuario: 'alumno',
-            fecha_registro: new Date().toISOString()
-        };
-
-        await firebase.database().ref('alumno/' + matricula).set(userData);
-        mostrarEstado('¡Registro exitoso!', 'success');
-        
-        // Redirigir a préstamos
-        window.location.href = 'prestamos.html';
-    } catch (error) {
-        console.error('Error:', error);
-        mostrarEstado('Error al registrar: ' + error.message, 'error');
     }
 }
 
