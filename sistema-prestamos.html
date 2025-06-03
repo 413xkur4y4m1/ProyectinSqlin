@@ -188,21 +188,26 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <script src="js/prestamos.js"></script>
-    <script>    // Función para mostrar mensajes de estado
+    </div>    <script>
+    // Función para mostrar mensajes de estado
     function mostrarEstado(mensaje, tipo) {
         const statusDiv = document.getElementById('status');
         statusDiv.className = 'status ' + tipo;
         statusDiv.textContent = mensaje;
         statusDiv.style.display = 'block';
+        
+        if (tipo !== 'loading') {
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
     }
 
-    // Iniciar sesión con correo y contraseña
-    async function iniciarSesion(event) {
-        event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
-
+    // Manejador del formulario de login
+    async function handleLogin(event) {
+        event.preventDefault();
+        if (window.auth.isRedirecting) return;
+        
         const matricula = document.getElementById('loginMatricula').value;
         const password = document.getElementById('loginPassword').value;
 
@@ -213,58 +218,30 @@
 
         try {
             mostrarEstado('Iniciando sesión...', 'loading');
-            await firebase.auth().signInWithEmailAndPassword(
-                `${matricula}@ulsa.mx`,
-                password
-            );
+            await window.auth.handleLoginWithMatricula(matricula, password);
         } catch (error) {
             console.error('Error:', error);
             mostrarEstado('Error al iniciar sesión: ' + error.message, 'error');
         }
     }
 
-    // Iniciar sesión con Microsoft
-    async function iniciarSesionMicrosoft() {
+    // Manejador de Microsoft Sign In
+    async function handleMicrosoftSignIn() {
+        if (window.auth.isRedirecting) return;
         try {
             mostrarEstado('Iniciando sesión con Microsoft...', 'loading');
-            const provider = new firebase.auth.OAuthProvider('microsoft.com');
-            
-            // Configuración específica para el proveedor de Microsoft
-            provider.setCustomParameters({
-                tenant: 'common', // o tu ID de tenant específico
-                prompt: 'select_account'
-            });
-
-            // Agregar los scopes necesarios
-            provider.addScope('profile');
-            provider.addScope('email');
-
-            const result = await firebase.auth().signInWithPopup(provider);
-            const user = result.user;
-            
-            // Verificar si el usuario existe en la base de datos
-            const userSnapshot = await firebase.database()
-                .ref('alumno')
-                .orderByChild('correo')
-                .equalTo(user.email)
-                .once('value');
-
-            if (!userSnapshot.exists()) {
-                mostrarEstado('Usuario no encontrado. Por favor regístrese primero.', 'error');
-                return;
-            }
-
-            // Redirigir a la página de préstamos
-            window.location.href = 'prestamos.html';
-            
+            await window.auth.handleMicrosoftSignIn();
         } catch (error) {
             console.error('Error:', error);
             mostrarEstado('Error al iniciar sesión con Microsoft: ' + error.message, 'error');
         }
     }
 
-    // Registrar nuevo usuario
-    async function registrar() {
+    // Manejador de registro
+    async function handleRegister(event) {
+        event.preventDefault();
+        if (window.auth.isRedirecting) return;
+
         const nombre = document.getElementById('nombre').value;
         const apellido_p = document.getElementById('apellido_p').value;
         const apellido_m = document.getElementById('apellido_m').value;
@@ -279,24 +256,14 @@
 
         try {
             mostrarEstado('Registrando usuario...', 'loading');
-
-            // Crear usuario en Firebase Auth
-            const userCredential = await firebase.auth().createUserWithEmailAndPassword(
+            await window.auth.handleRegister({
+                nombre,
+                apellido_p,
+                apellido_m,
+                matricula,
                 correo,
                 password
-            );
-
-            // Guardar datos adicionales en Realtime Database
-            const userData = {
-                nombre: nombre,
-                apellido_p: apellido_p,
-                apellido_m: apellido_m,
-                matricula: matricula,
-                correo: correo,
-                fecha_registro: new Date().toISOString()
-            };
-
-            await firebase.database().ref('alumno/' + matricula).set(userData);
+            });
             mostrarEstado('¡Registro exitoso!', 'success');
         } catch (error) {
             console.error('Error:', error);
