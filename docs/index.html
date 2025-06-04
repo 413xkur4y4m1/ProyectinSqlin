@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - Sistema de Préstamos ULSA</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+    <style>
+        :root {
+            --ulsa-blue: #0078d4;
+            --ulsa-dark-blue: #106ebe;
+            --text-light: #f3f2fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .app-bar {
+            background-color: var(--ulsa-blue);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .app-bar img {
+            height: 40px;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .interactive-button {
+            background-color: var(--ulsa-blue);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-button:hover {
+            background-color: var(--ulsa-dark-blue);
+            transform: translateY(-2px);
+        }
+
+        .diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 3px solid var(--ulsa-blue);
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--ulsa-blue);
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        #methodologySection,
+        #architectureSection,
+        #securitySection {
+            display: none;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            border-bottom-color: var(--ulsa-blue);
+            color: var(--ulsa-blue);
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Bar -->
+    <div class="app-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="../index.html">
+                <img src="../images/lasalle-logo.png" alt="Logo La Salle">
+            </a>
+            <div>
+                <button class="interactive-button" onclick="showSection('overview')">Vista General</button>
+                <button class="interactive-button" onclick="showSection('methodology')">Metodología</button>
+                <button class="interactive-button" onclick="showSection('architecture')">Arquitectura</button>
+                <button class="interactive-button" onclick="showSection('security')">Seguridad</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content container">
+        <!-- Overview Section -->
+        <div id="overviewSection" class="section-card">
+            <h1 class="text-center mb-4">Sistema de Préstamos ULSA</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Objetivo del Proyecto</h2>
+                    <p>El Sistema de Préstamos ULSA es una plataforma web diseñada para gestionar eficientemente el préstamo 
+                    de equipos y materiales en la Universidad La Salle. Facilita el proceso tanto para alumnos como para 
+                    administradores, proporcionando una interfaz intuitiva y segura.</p>
+                </div>
+                <div class="col-md-6">
+                    <h2>Características Principales</h2>
+                    <ul>
+                        <li>Autenticación segura con Microsoft y correo institucional</li>
+                        <li>Gestión de préstamos en tiempo real</li>
+                        <li>Sistema de seguimiento de adeudos</li>
+                        <li>Panel de administración intuitivo</li>
+                        <li>Integración con Firebase para tiempo real</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Methodology Section -->
+        <div id="methodologySection" class="section-card">
+            <h2>Metodología SCRUM</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Sprint 1 (2 semanas)</h3>
+                    <p>- Configuración inicial del proyecto</p>
+                    <p>- Implementación de autenticación básica</p>
+                    <p>- Diseño de la interfaz de usuario principal</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Sprint 2 (2 semanas)</h3>
+                    <p>- Integración con Microsoft Azure AD</p>
+                    <p>- Implementación de FingerprintJS</p>
+                    <p>- Sistema de roles y permisos</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Sprint 3 (2 semanas)</h3>
+                    <p>- Sistema de préstamos y devoluciones</p>
+                    <p>- Gestión de adeudos</p>
+                    <p>- Notificaciones en tiempo real</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div id="architectureSection" class="section-card">
+            <h2>Arquitectura del Sistema</h2>
+            <div class="diagram">
+                <h3>Frontend</h3>
+                <div class="code-block">
+                    - HTML5, CSS3, JavaScript
+                    - Bootstrap 4.5.0
+                    - Firebase SDK 8.10.1
+                    - FingerprintJS v3
+                </div>
+
+                <h3>Backend</h3>
+                <div class="code-block">
+                    - Firebase Authentication
+                    - Firebase Realtime Database
+                    - Node.js Server (Express)
+                    - Microsoft Azure AD Integration
+                </div>
+
+                <h3>Flujo de Autenticación</h3>
+                <pre class="code-block">
+1. Usuario → Login Form
+2. Auth System → Microsoft/Email
+3. Firebase Auth → Verify
+4. FingerprintJS → Device Check
+5. Database → User Profile
+                </pre>
+            </div>
+        </div>
+
+        <!-- Security Section -->
+        <div id="securitySection" class="section-card">
+            <h2>Seguridad del Sistema</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Autenticación Microsoft</h3>
+                    <p>El sistema implementa dos métodos de autenticación con Microsoft:</p>
+                    <ul>
+                        <li>OAuth 2.0 con Azure AD</li>
+                        <li>Firebase Authentication</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h3>FingerprintJS</h3>
+                    <p>Implementación de identificación de dispositivos para:</p>
+                    <ul>
+                        <li>Prevención de fraude</li>
+                        <li>Detección de inicio de sesión sospechoso</li>
+                        <li>Verificación de dispositivos autorizados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            // Ocultar todas las secciones
+            document.getElementById('overviewSection').style.display = 'none';
+            document.getElementById('methodologySection').style.display = 'none';
+            document.getElementById('architectureSection').style.display = 'none';
+            document.getElementById('securitySection').style.display = 'none';
+
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionName + 'Section').style.display = 'block';
+
+            // Actualizar botones activos
+            const buttons = document.querySelectorAll('.interactive-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.toLowerCase().includes(sectionName)) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        // Mostrar la sección de vista general por defecto
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('overview');
+        });
+    </script>
+
+    <!-- Scripts necesarios -->
+    <script src="../js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
