@@ -1,7 +1,7 @@
 {
   "name": "sistema-correos-ul-saneza",
   "version": "1.0.0",
-  "description": "Sistema de envío de correos para la Universidad UL Saneza",
+  "description": "Sistema de envío de correos para la Universidad ULSaneza",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
